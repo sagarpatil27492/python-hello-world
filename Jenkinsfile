@@ -17,9 +17,9 @@ pipeline {
             }
             steps {
                    sh '''#!/bin/bash 
-                   sudo docker rm -f flake8
-                   CONTAINER_python=$(sodo docker run -d -t -e PYTHONUNBUFFERED=0 -w /root -v ${PWD}:/root  --name flake8 python:3.7-alpine /bin/sh)
-                   sudo docker exec -i $CONTAINER_python /bin/sh  -c "pip install flake8 && flake8 --exit-zero --format=pylint notification_service/ >flake8-out.txt"
+                   #sudo docker rm -f flake8
+                   CONTAINER_python=$(sudo docker run -d -t -e PYTHONUNBUFFERED=0 -w /root -v ${PWD}:/root  --name flake8 python:3.7-alpine /bin/sh)
+                   sudo docker exec -i $CONTAINER_python /bin/sh  -c "pip install flake8 && flake8 --exit-zero --format=pylint app.py/ >flake8-out.txt"
                    sudo docker exec -i $CONTAINER_python /bin/sh  -c "ls -lrth && pwd"
                        
                        #python3.7 -m virtualenv my-venv 
@@ -36,7 +36,7 @@ pipeline {
                   }
                 }
         }
-
+  /*
         stage('Dev-PublishToSonarQube') {
             when {
                 branch 'main'
@@ -67,7 +67,7 @@ pipeline {
         }
     }
 }
-  /*
+
   
 // define function to build docker images
 void imageBuild(registry,env,Tags) {
@@ -99,10 +99,10 @@ void deploy(registry,env,dockerUser,dockerPassword,Tags){
     sh "sudo docker run -d --name java-app-$env-$Tags -p 3001:8080 $registry/$env:$Tags "   
 }
 
-*/
-
 // function to deploy a container to an environment by pulling the image from docker hub registry
 void versiontags(Tags) {
     def tag= "Release-V-$Tags-0.0"
    return tag
 }
+
+*/
