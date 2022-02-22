@@ -46,24 +46,23 @@ pipeline {
             options { skipDefaultCheckout() }
             steps {
                withSonarQubeEnv('sonar-qube') {
-            sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=python-hello-world \
-            -Dsonar.sources=. \
-            -Dsonar.python.flake8.reportPaths=flake8-out.txt \
-           # -Dsonar.python.xunit.reportPath=nosetests.xml \
-           # -Dsonar.python.coverage.reportPaths=coverage.xml 
-           # -Dsonar.tests=notificationservice/ConsumerEx/ \
-           #-Dsonar.python.xunit.skipDetails=false \
-           '''
-           
-           //echo "hello"
-            } 
+                   sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=python-hello-world \
+                    -Dsonar.sources=. \
+                    -Dsonar.python.flake8.reportPaths=flake8-out.txt \
+                    # -Dsonar.python.xunit.reportPath=nosetests.xml \
+                    # -Dsonar.python.coverage.reportPaths=coverage.xml 
+                    # -Dsonar.tests=notificationservice/ConsumerEx/ \
+                    #-Dsonar.python.xunit.skipDetails=false \
+                    '''
+                } 
+                //echo "hello"
+            
                 // abort the job if QualityGate fails.
-            /*
-                timeout(time: 10, unit: 'MINUTES') {
-                     waitForQualityGate abortPipeline: true
-                }  
-            } */
- 
+                /*
+                    timeout(time: 10, unit: 'MINUTES') {
+                        waitForQualityGate abortPipeline: true
+                 }  */
+            }
         }
     }
 }
