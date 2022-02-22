@@ -36,7 +36,7 @@ pipeline {
                   }
                 }
         }
-  /*
+
         stage('Dev-PublishToSonarQube') {
             when {
                 branch 'main'
@@ -67,7 +67,7 @@ pipeline {
         }
     }
 }
-
+  /*
   
 // define function to build docker images
 void imageBuild(registry,env,Tags) {
