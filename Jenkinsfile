@@ -17,7 +17,7 @@ pipeline {
             }
             steps {
                    sh '''#!/bin/bash 
-                   #sudo docker rm -f flake8
+                   sudo docker rm -f flake8
                    CONTAINER_python=$(sudo docker run -d -t -e PYTHONUNBUFFERED=0 -w /root -v ${PWD}:/root  --name flake8 python:3.7-alpine /bin/sh)
                    sudo docker exec -i $CONTAINER_python /bin/sh  -c "pip install --upgrade pip"
                    sudo docker exec -i $CONTAINER_python /bin/sh  -c "pip install flake8 && flake8 --exit-zero --format=pylint app.py/ >flake8-out.txt"
