@@ -17,11 +17,12 @@ pipeline {
             }
             steps {
                    sh '''#!/bin/bash 
-                   docker rm -f flake8
-                   CONTAINER_python=$(docker run -d -t -e PYTHONUNBUFFERED=0 -w /root -v ${PWD}:/root  --name flake8 python:3.7-alpine /bin/sh)
-                   docker exec -i $CONTAINER_python /bin/sh  -c "pip install flake8 && flake8 --exit-zero --format=pylint notification_service/ >flake8-out.txt"
-                   docker exec -i $CONTAINER_python /bin/sh  -c "ls -lrth && pwd"
-                        #python3.7 -m virtualenv my-venv 
+                   sudo docker rm -f flake8
+                   CONTAINER_python=$(sodo docker run -d -t -e PYTHONUNBUFFERED=0 -w /root -v ${PWD}:/root  --name flake8 python:3.7-alpine /bin/sh)
+                   sudo docker exec -i $CONTAINER_python /bin/sh  -c "pip install flake8 && flake8 --exit-zero --format=pylint notification_service/ >flake8-out.txt"
+                   sudo docker exec -i $CONTAINER_python /bin/sh  -c "ls -lrth && pwd"
+                       
+                       #python3.7 -m virtualenv my-venv 
                         #source  my-venv/bin/activate
                         #Pip install flake8
                         #flake8 --format=pylint  notification_service/
