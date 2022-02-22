@@ -66,7 +66,8 @@ pipeline {
         }
     }
 }
-
+  /*
+  
 // define function to build docker images
 void imageBuild(registry,env,Tags) {
     
@@ -96,6 +97,8 @@ void deploy(registry,env,dockerUser,dockerPassword,Tags){
     sh "sudo docker login -u $dockerUser -p $dockerPassword "
     sh "sudo docker run -d --name java-app-$env-$Tags -p 3001:8080 $registry/$env:$Tags "   
 }
+
+*/
 
 // function to deploy a container to an environment by pulling the image from docker hub registry
 void versiontags(Tags) {
