@@ -98,11 +98,10 @@ void deploy(registry,env,dockerUser,dockerPassword,Tags){
     sh "sudo docker login -u $dockerUser -p $dockerPassword "
     sh "sudo docker run -d --name java-app-$env-$Tags -p 3001:8080 $registry/$env:$Tags "   
 }
+*/
 
 // function to deploy a container to an environment by pulling the image from docker hub registry
 void versiontags(Tags) {
     def tag= "Release-V-$Tags-0.0"
    return tag
 }
-
-*/
