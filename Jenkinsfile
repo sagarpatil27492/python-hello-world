@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        dev= 'develop'
-        qa= 'main'
-        staging='stage'
+        dev= 'python-dev'
+        qa= 'python-qa'
+        staging='python-stage'
         Tags= '$BUILD_NUMBER'
         dockerHubRegistryID = 'sagarppatil27041992'
         versionTags= versiontags(Tags)
@@ -68,9 +68,72 @@ pipeline {
                  }  */
             }
         }
+        stage ("Dev-docker build") {
+            when {
+                branch 'develop'   
+            }
+            options { skipDefaultCheckout() }
+            steps{
+                imageBuild(dockerHubRegistryID,dev,Tags) // calling image build function to build image for dev environment
+            }
+        }
+        stage('Dev-Docker Publish') {
+            when {
+                branch 'develop'   
+            }
+            options { skipDefaultCheckout() }
+            steps {
+               withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                   
+                    // calling pushToImage function to push image for dev environment to docker hub registry
+                     pushToImage(dockerHubRegistryID,dev,dockerHubUser,dockerHubPassword,Tags)
+                
+                   // remove the image once its pushed to dockerhub registry from local
+                    deleteImages(dockerHubRegistryID,dev,Tags) 
+
+                }
+            }
+        }
+
+        stage('Dev-Deploy') {
+            when {
+                branch 'develop'   
+            }
+            options { skipDefaultCheckout() }
+            steps {
+               withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                   
+                  // we run the docker image  that we build in previous steps by pulling it from docker hub registry
+                    deploy(dockerHubRegistryID,dev,dockerHubUser,dockerHubPassword,Tags)
+                }
+            }
+        }
+        stage('Push GitTag') {
+            when {
+                branch 'main'
+            }
+            steps {
+                withCredentials([gitUsernamePassword(credentialsId: 'github-cred', gitToolName: 'Default')]) {
+                   sh  "git tag $versionTags"
+                   // here we tag master branch
+                   sh "git push origin $versionTags"
+                   // here push the git tag
+                }
+            }
+        }
+        stage ("BuildDockerImage") {
+            when {
+                branch 'main'   
+            }
+            steps{
+                imageBuild(dockerHubRegistryID,qa,Tags) 
+                // calling image build function for qa env
+                
+            }
+        }
     }
 }
-  /*
+  
   
 // define function to build docker images
 void imageBuild(registry,env,Tags) {
@@ -101,7 +164,7 @@ void deploy(registry,env,dockerUser,dockerPassword,Tags){
     sh "sudo docker login -u $dockerUser -p $dockerPassword "
     sh "sudo docker run -d --name java-app-$env-$Tags -p 3001:8080 $registry/$env:$Tags "   
 }
-*/
+
 
 // function to deploy a container to an environment by pulling the image from docker hub registry
 void versiontags(Tags) {
