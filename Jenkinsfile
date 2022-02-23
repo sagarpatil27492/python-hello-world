@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Dev-StaticCodeAnalysis') {
             when {
-                branch 'main'
+                branch 'develop'
             }
             steps {
                    sh '''#!/bin/bash 
@@ -42,7 +42,7 @@ pipeline {
 
         stage('Dev-PublishToSonarQube') {
             when {
-                branch 'main'
+                branch 'develop'
             }
             environment {
              scannerHome = tool 'sonarscanner4'
